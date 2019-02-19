@@ -53,7 +53,7 @@ async function getRequiredBlockConfirmations(contract) {
 async function getEvents({ contract, event, fromBlock, toBlock, filter }) {
   try {
     const contractAddress = contract.options.address
-    logger.info(
+    logger.debug(
       { contractAddress, event, fromBlock: fromBlock.toString(), toBlock: toBlock.toString() },
       'Getting past events'
     )

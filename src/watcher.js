@@ -134,7 +134,7 @@ async function main({ sendToQueue }) {
       toBlock,
       filter: config.eventFilter
     })
-    logger.info(`Found ${events.length} ${config.event} events`)
+    logger.debug(`Found ${events.length} ${config.event} events`)
 
     if (events.length) {
       const job = await processEvents(events)
