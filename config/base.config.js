@@ -62,6 +62,7 @@ const bridgeConfig = {
   foreignBridgeAbi: foreignAbi,
   eventFilter: {},
   validatorAddress: VALIDATOR_ADDRESS || privateKeyToAddress(VALIDATOR_ADDRESS_PRIVATE_KEY),
+  relayTxs: process.env.RELAY_TXS || 'assigned',
   maxProcessingTime
 }
 

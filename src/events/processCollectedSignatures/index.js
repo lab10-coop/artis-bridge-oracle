@@ -25,6 +25,10 @@ function processCollectedSignaturesBuilder(config) {
     config.foreignBridgeAddress
   )
 
+  if (! new Set(['all', 'assigned', 'none']).has(config.relayTxs)) {
+    throw new Error(`bad value for config item RELAY_TXS: ${config.relayTxs}`);
+  }
+
   return async function processCollectedSignatures(signatures) {
     const txToSend = []
 
@@ -52,8 +56,8 @@ function processCollectedSignaturesBuilder(config) {
           eventTransactionHash: colSignature.transactionHash
         })
 
-        if (
-          authorityResponsibleForRelay === web3Home.utils.toChecksumAddress(config.validatorAddress)
+        if (config.relayTxs === 'all' || (config.relayTxs === 'assigned'
+          && authorityResponsibleForRelay === web3Home.utils.toChecksumAddress(config.validatorAddress))
         ) {
           logger.info(`Processing CollectedSignatures ${colSignature.transactionHash}`)
           const message = await homeBridge.methods.message(messageHash).call()
@@ -115,11 +119,19 @@ function processCollectedSignaturesBuilder(config) {
             to: config.foreignBridgeAddress
           })
         } else {
-          logger.info(
-            `Validator not responsible for relaying CollectedSignatures ${
-              colSignature.transactionHash
-            }`
-          )
+          if (config.relayTxs === 'assigned') {
+            logger.info(
+              `Validator not responsible for relaying CollectedSignatures ${
+                colSignature.transactionHash
+              }`
+            )
+          } else {
+            logger.debug(
+              `Validator not configured for relaying CollectedSignatures ${
+                colSignature.transactionHash
+              }`
+            )
+          }
         }
       })
     )
