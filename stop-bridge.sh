@@ -17,6 +17,11 @@ fi
 for s in `cat $services_file`; do 
 	echo "stopping $s..."
 	systemctl stop $s
+
+        if [[ ${1-} == "--persist" ]]; then
+                echo "disabling $s (no autoboot)"
+                systemctl disable $s
+        fi
 done
 
 echo "all done"

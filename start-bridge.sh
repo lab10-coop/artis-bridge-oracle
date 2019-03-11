@@ -17,6 +17,11 @@ fi
 for s in `cat $services_file`; do 
 	echo "starting $s..."
 	systemctl start $s
+
+        if [[ ${1-} == "--persist" ]]; then
+                echo "enabling $s (autoboot)"
+                systemctl enable $s
+        fi
 done
 
 echo "all done"
