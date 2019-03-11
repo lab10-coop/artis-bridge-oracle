@@ -58,12 +58,12 @@ fi
 
 if ! systemctl is-active --quiet redis-server; then
 	echo "installing redis-server..."
-	apt install -y redis-server rabbitmq-server
+	apt install -y redis-server
 fi
 
 if ! systemctl is-active --quiet rabbitmq-server; then
 	echo "installing rabbitmq-server..."
-	apt install rabbitmq-server
+	apt install -y rabbitmq-server
 
 	# bind rabbitmq to localhost only for security reasons
 	# working config found [here](https://github.com/LibreTime/libretime/issues/316#issuecomment-334965321)
