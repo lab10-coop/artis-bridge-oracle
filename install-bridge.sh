@@ -66,10 +66,28 @@ if ! systemctl is-active --quiet rabbitmq-server; then
 	apt install rabbitmq-server
 
 	# bind rabbitmq to localhost only for security reasons
-	echo "restarting rabbitmq (partially) bound to localhost..."
-	echo "NODE_IP_ADDRESS=127.0.0.1" >> /etc/rabbitmq/rabbitmq-env.conf
+	# working config found [here](https://github.com/LibreTime/libretime/issues/316#issuecomment-334965321)
+	cat <<EOF > /etc/rabbitmq/rabbitmq-env.conf
+NODE_IP_ADDRESS=127.0.0.1
+
+export RABBITMQ_NODENAME=rabbit@localhost
+export RABBITMQ_NODE_IP_ADDRESS=127.0.0.1
+export ERL_EPMD_ADDRESS=127.0.0.1
+export RABBITMQ_CONFIG_FILE="/etc/rabbitmq/rabbit"
+EOF
+
+	cat <<EOF > /etc/rabbitmq/rabbit.config
+[
+    {rabbitmq_management, [
+        {listener, [{port, 25672}, {ip, "127.0.0.1"}]}
+    ]},
+    {kernel, [
+        {inet_dist_use_interface,{127,0,0,1}}
+    ]}
+].
+EOF
+	echo "restarting rabbitmq bound to localhost..."
 	systemctl restart rabbitmq-server.service
-	# TODO: this still leaves ports listening on the global interface. To be changed or secured with firewall
 fi
 
 ### APPLICATION ###
