@@ -41,6 +41,7 @@ fi
 
 if ! dpkg -s build-essential > /dev/null; then
 	echo "installing build-essential"
+	apt update
 	apt install -y build-essential curl
 	# maybe not all of those are needed, but at least make and g++ are
 fi
