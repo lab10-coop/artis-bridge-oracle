@@ -46,16 +46,12 @@ if ! dpkg -s build-essential > /dev/null; then
 	# maybe not all of those are needed, but at least make and g++ are
 fi
 
-if [[ ! -f nodesource_setup.sh ]]; then
-	echo "installing nodejs and npm"
-	# the npm package provided by the OS itself is too old
-	curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh && bash nodesource_setup.sh
+if [[ `node --version` != v8.* && `node --version` != v10.* ]]; then
+	echo "no supported version of nodejs found, installing nodejs v10..."
+	curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && bash nodesource_setup.sh
 	apt update
 	apt install -y nodejs
 fi
-
-#echo "installing node and npm..."
-#apt install -y nodejs npm
 
 if ! systemctl is-active --quiet redis-server; then
 	echo "installing redis-server..."
