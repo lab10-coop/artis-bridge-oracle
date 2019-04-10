@@ -3,7 +3,7 @@
 set -e
 set -u
 
-# Setup for bridge-oracle, to be run as root. Tested on Ubuntu 18.04 only.
+# Setup for bridge-oracle, to be run as root. Tested on Ubuntu 16.04 and 18.04.
 # Installs dependencies, the application and creates systemd units.
 # Based on this docs: https://github.com/poanetwork/token-bridge#installation-and-deployment
 
@@ -46,7 +46,7 @@ if ! dpkg -s build-essential > /dev/null; then
 	# maybe not all of those are needed, but at least make and g++ are
 fi
 
-if [[ `node --version` != v8.* && `node --version` != v10.* ]]; then
+if [[ `node --version 2> /dev/null` != v8.* && `node --version 2> /dev/null` != v10.* ]]; then
 	echo "no supported version of nodejs found, installing nodejs v10..."
 	curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && bash nodesource_setup.sh
 	apt update
